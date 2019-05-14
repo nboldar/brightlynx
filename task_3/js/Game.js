@@ -20,7 +20,7 @@ let defaultSettings = {
     /**
      * сложность игры, чем меньше, тем сложнее - быстрее будут пропадать цвета после неправильного выбора
      */
-    difficulty: 5,
+    difficulty: 4,
 };
 
 class Game {
@@ -227,7 +227,7 @@ class Game {
     /**
      * метод показывает результат игры,время за которое игра пройдена
      */
-    showResult(){
+    showResult() {
         let time = this.stopwatch.renderTimeView();
         let message = 'Вы окончили игру с результатом: ' + time;
         this.resultElement.text(message);
