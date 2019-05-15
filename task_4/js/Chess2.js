@@ -1,5 +1,5 @@
 class Chess2 extends Chess {
-    constructor(currentColumn = null, currentRow = null, mapMaker = new ChessMap()) {
+    constructor(mapMaker = new ChessMap()) {
         super();
         this.mapMaker = mapMaker;
         this.rootElement = $("#root");
@@ -18,35 +18,30 @@ class Chess2 extends Chess {
             });
 
             let element = $(event.target);
-            this.currentColumnIndex = (+element.data('idx')) - 1;
-            this.currentRow = (+element.parent().data('idx'));
-            let possibleMoves = this.createMoves().split(',');
+            this.currentCellCoordinates.column = (+element.data('idx'));
+            this.currentCellCoordinates.row = (+element.parent().data('idx'));
+            let possibleMoves = this.getPossibleSteedMovesCoordinates();
 
             possibleMoves.forEach(el => {
-                let address = this.parseCellAddress(el.trim());
-                let element = this.getElementByCoordinates(address);
-                element.addClass(this.possibleMoveCellClassName);
+                console.log(el);
+
+                 let element = this.getElementByCoordinates(el);
+                 element.addClass(this.possibleMoveCellClassName);
             });
-            this.possibleMove.length = 0;
+            //this.possibleMove.length = 0;
         });
     }
 
-    parseCellAddress(address) {
-        let resultArray = {};
-        resultArray.column = this.getColumnIdx(address[0]) + 1;
-        resultArray.row = +address[1];
-        return resultArray;
-    }
-
-    getElementByCoordinates(coordinates) {
+    getElementByCoordinates(coordinatesObj) {
         let elements = $(`.${this.mapMaker.cellChessClassName}`);
         let result = null;
         $.each(elements, (index, value) => {
             let elem = $(value);
-            if (elem.data('idx') === coordinates.column && elem.parent().data('idx') === coordinates.row) {
+            if (elem.data('idx') === coordinatesObj.column && elem.parent().data('idx') === coordinatesObj.row) {
                 result = elem;
             }
         });
         return result;
     }
+
 }

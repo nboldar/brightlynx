@@ -1,93 +1,131 @@
 class Chess {
     /*создаем объект*/
     /**
-     *
      * @param currentColumn String (адрес колонки шахматной доски)
      * @param currentRow String (адрес строки шахматной доски)
      */
-    constructor(currentColumn, currentRow) {
-        this.columns = ["A", "B", "C", "D", "E", "F", "G", "H"];
-        this.currentColumnIndex = this.getColumnIdx(currentColumn);
-        this.currentRow = +currentRow;
-        this.possibleMove = [];
+    constructor() {
+        this.columnsNames = ["A", "B", "C", "D", "E", "F", "G", "H"];
+        this.currentCellCoordinates = {column: null, row: null};
+        //this.possibleMove = [];
+    }
+
+    showPossibleMoves(userData) {
+        if (this.validateCoordinatesInChessFormat(userData)) {
+            Object.assign(this.currentCellCoordinates, this.parseCellAddress(userData));
+            let possibleMoves = this.getPossibleSteedMovesCoordinates();
+            return this.getPossibleMovesInChessFormat(possibleMoves).join(', ');
+        } else {
+            return 'Ошибка!!! Введите текущее положение коня в формате "D5"';
+        }
     }
 
     /**
-     *
-     * @param column String
-     * @returns {number}
+     * метод проверки пользовательских данных
+     * @param coordinates {String}
+     * @returns {boolean}
      */
-    getColumnIdx(column) {
-        return this.columns.indexOf(column);
+    validateCoordinatesInChessFormat(coordinates) {
+        return coordinates.match("^[a-hA-H]{1}[1-8]{1}$");
     }
 
     /**
-     * добавляем элемент в результирующий массив
-     * @param element String (например "E3")
+     * метод создает координаты поля в шахматном формате из числового, например '11'=>'A1'
+     * @param coordinatesAsString {String}
+     * @returns {string}
      */
-    addMove(element) {
-        this.possibleMove.push(element);
+    getCoordinatesInChessFormat(coordinates) {
+        return this.createElement(this.columnsNames[coordinates.column - 1], coordinates.row);
     }
 
     /**
-     *
-     * @param column String
-     * @param row Number
+     * метод создает массив координат в шахматном формате из числового, например ['11','22','33','44']=>['A1','B2','C3','D4']
+     * @param arrayPossibleMoves {Array}
+     * @returns {Array}
+     */
+    getPossibleMovesInChessFormat(arrayPossibleMoves) {
+        let result = [];
+        arrayPossibleMoves.forEach((element) => {
+            result.push(this.getCoordinatesInChessFormat(element));
+        });
+        return result;
+    }
+
+    /**
+     * метод возвращает координаты шахматной ячейки в виде строки, например '24' или 'B4'
+     * @param column
+     * @param row
      * @returns {string}
      */
     createElement(column, row) {
         return "".concat(column, row);
     }
 
-    createMoves() {
-        let currentColIdx = this.currentColumnIndex;
+    getPossibleSteedMovesCoordinates() {
+        let possibleMoves = [];
+        let currentColIdx = this.currentCellCoordinates.column;
 
-        let colMinus2 = this.columns[currentColIdx - 2];
-        let colMinus1 = this.columns[currentColIdx - 1];
-        let colPlus1 = this.columns[currentColIdx + 1];
-        let colPlus2 = this.columns[currentColIdx + 2];
+        let colMinus2 = currentColIdx - 2;
+        let colMinus1 = currentColIdx - 1;
+        let colPlus1 = currentColIdx + 1;
+        let colPlus2 = currentColIdx + 2;
 
-        let currentRowNumber = this.currentRow;
+        let currentRowNumber = this.currentCellCoordinates.row;
 
         let rowMinus2 = currentRowNumber - 2;
         let rowMinus1 = currentRowNumber - 1;
         let rowPlus1 = currentRowNumber + 1;
         let rowPlus2 = currentRowNumber + 2;
 
-        if ((currentColIdx - 2) >= 0) {
+        if ((currentColIdx - 2) > 0) {
             if ((currentRowNumber - 1) > 0) {
-                this.addMove(this.createElement(colMinus2, rowMinus1));
+                possibleMoves.push({column: colMinus2, row: rowMinus1});
             }
             if ((currentRowNumber + 1) < 9) {
-                this.addMove(this.createElement(colMinus2,rowPlus1));
+                possibleMoves.push({column: colMinus2, row: rowPlus1});
             }
         }
-        if ((currentColIdx - 1) >= 0) {
+        if ((currentColIdx - 1) > 0) {
             if ((currentRowNumber - 2) > 0) {
-                this.addMove(this.createElement(colMinus1, rowMinus2));
+                possibleMoves.push({column: colMinus1, row: rowMinus2});
             }
             if ((currentRowNumber + 2) < 9) {
-                this.addMove(this.createElement(colMinus1, rowPlus2));
+                possibleMoves.push({column: colMinus1, row: rowPlus2});
             }
         }
         if ((currentColIdx + 1) < 8) {
             if ((currentRowNumber - 2) > 0) {
-                this.addMove(this.createElement(colPlus1, rowMinus2));
+                possibleMoves.push({column: colPlus1, row: rowMinus2});
             }
             if ((currentRowNumber + 2) < 9) {
-                this.addMove(this.createElement(colPlus1, rowPlus2));
+                possibleMoves.push({column: colPlus1, row: rowPlus2});
             }
         }
         if ((currentColIdx + 2) < 8) {
             if ((currentRowNumber - 1) > 0) {
-                this.addMove(this.createElement(colPlus2, rowMinus1));
+                possibleMoves.push({column: colPlus2, row: rowMinus1});
             }
             if ((currentRowNumber + 1) < 9) {
-                this.addMove(this.createElement(colPlus2, rowPlus1));
+                possibleMoves.push({column: colPlus2, row: rowPlus1});
             }
         }
-        return this.possibleMove.join(", ");
+        console.log(possibleMoves);
+        return possibleMoves;
     }
 
+    parseCellAddress(address) {
+        let result = {};
+        result.column = this.columnsNames.indexOf(address[0].toUpperCase()) + 1;
+        result.row = +address[1];
+        console.log(result);
+        return result;
+    }
+
+    parseCellCoordinates(coordinatesAsString) {
+        return {
+            column: +coordinatesAsString[0],
+            row: +coordinatesAsString[1]
+        };
+    }
 
 }
