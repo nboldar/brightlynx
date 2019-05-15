@@ -1,10 +1,13 @@
+/**
+ * объект секундомера
+ */
 class Stopwatch {
     /**
      *
      * @param jQueryElement
      */
     constructor(jQueryElement) {
-        this.jQueryElement = jQueryElement;
+        this.jQueryElement = jQueryElement;//элемент куда отрисовываем секундомер
         this.h = 0;// часы
         this.m = 0;//минуты
         this.s = 0;//секунды
@@ -13,7 +16,7 @@ class Stopwatch {
     }
 
     /**
-     *
+     *метод добавляет ведущий ноль вэлементах времени
      * @param num
      * @returns {string}
      */
@@ -22,7 +25,7 @@ class Stopwatch {
     }
 
     /**
-     *
+     *отрисовка текущего момента времени
      * @returns {string}
      */
     renderTimeView() {
@@ -37,7 +40,7 @@ class Stopwatch {
     }
 
     /**
-     *
+     *метод который реазизовывает поведение времени при увеличении какого -то элемента времени
      */
     updateTime() {
         if (this.ms === 100) {
@@ -58,10 +61,9 @@ class Stopwatch {
     }
 
     /**
-     *
+     *запуск интервального изменения текущего времени, интервал выбран оптимальный 10мс
      */
     start() {
-
         let self = this;
         self.setToZero();
         self.timeout = setInterval(() => {
@@ -70,7 +72,7 @@ class Stopwatch {
     }
 
     /**
-     *
+     *метод единичного  изменения времени
      */
     tick() {
         this.ms++;
@@ -79,15 +81,24 @@ class Stopwatch {
 
     }
 
+    /**
+     * метод остановки интервального изменения
+     */
     stop() {
         let self = this;
         window.clearInterval(self.timeout);
     }
 
+    /**
+     * метод который обнуляет значения времени
+     */
     setToZero() {
         this.h = this.m = this.s = this.ms = 0;
     }
 
+    /**
+     * метод отрисовки начального значения времени
+     */
     backToStart() {
         this.setToZero();
         this.renderTimeView();

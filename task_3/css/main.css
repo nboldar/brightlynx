@@ -1,18 +1,6 @@
 .column{
-
-    height: 3em;
+    height: 70px;
+    width: 70px;
     border: 1px solid black;
 }
 
-.red{
-    background-color: red;
-}
-.blue{
-    background-color: blue;
-}
-.green{
-    background-color: green;
-}
-.yellow{
-    background-color: yellow;
-}

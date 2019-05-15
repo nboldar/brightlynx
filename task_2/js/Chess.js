@@ -1,15 +1,16 @@
 class Chess {
     /*создаем объект*/
-    /**
-     * @param currentColumn String (адрес колонки шахматной доски)
-     * @param currentRow String (адрес строки шахматной доски)
-     */
+
     constructor() {
         this.columnsNames = ["A", "B", "C", "D", "E", "F", "G", "H"];
         this.currentCellCoordinates = {column: null, row: null};
-        //this.possibleMove = [];
     }
 
+    /**
+     * метод возвращает строку со списком шахматных полей кудаможет пойти конь из текущей позиции
+     * @param userData {String} введенные пользователем имя шахматного поля типа А2 или В8
+     * @returns {string}
+     */
     showPossibleMoves(userData) {
         if (this.validateCoordinatesInChessFormat(userData)) {
             Object.assign(this.currentCellCoordinates, this.parseCellAddress(userData));
@@ -31,8 +32,8 @@ class Chess {
 
     /**
      * метод создает координаты поля в шахматном формате из числового, например '11'=>'A1'
-     * @param coordinatesAsString {String}
      * @returns {string}
+     * @param coordinates
      */
     getCoordinatesInChessFormat(coordinates) {
         return this.createElement(this.columnsNames[coordinates.column - 1], coordinates.row);
@@ -61,6 +62,10 @@ class Chess {
         return "".concat(column, row);
     }
 
+    /**
+     * основной метод который возвращает массив координат шахматных полей куда может пойти конь из текущей позиции в форме объектов
+     * @returns {Array}
+     */
     getPossibleSteedMovesCoordinates() {
         let possibleMoves = [];
         let currentColIdx = this.currentCellCoordinates.column;
@@ -109,10 +114,14 @@ class Chess {
                 possibleMoves.push({column: colPlus2, row: rowPlus1});
             }
         }
-        console.log(possibleMoves);
         return possibleMoves;
     }
 
+    /**
+     *создает объект координат из строки формата 'A6'
+     * @param address
+     * @returns {{column: number, row: number}}
+     */
     parseCellAddress(address) {
         let result = {};
         result.column = this.columnsNames.indexOf(address[0].toUpperCase()) + 1;
@@ -121,6 +130,11 @@ class Chess {
         return result;
     }
 
+    /**
+     *создает объект координат из строки формата '34'
+     * @param coordinatesAsString
+     * @returns {{column: number, row: number}}
+     */
     parseCellCoordinates(coordinatesAsString) {
         return {
             column: +coordinatesAsString[0],
